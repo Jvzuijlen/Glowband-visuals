@@ -53,10 +53,10 @@ public class SQL
                     double SELO = myRs.getDouble("SELO");
                     
                     crowd = new Crowd(width, height);
-                    crowd.NWlatitude = NWLA;
-                    crowd.NWlongitude = NWLO;
-                    crowd.SElatitude = SELA;
-                    crowd.SElongitude = SELO;
+                    //crowd.NWlatitude = NWLA;
+                    //crowd.NWlongitude = NWLO;
+                    //crowd.SElatitude = SELA;
+                    //crowd.SElongitude = SELO;
                     
                 }
             }

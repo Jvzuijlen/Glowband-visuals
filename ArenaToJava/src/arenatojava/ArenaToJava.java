@@ -16,7 +16,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -42,7 +41,8 @@ public class ArenaToJava extends Application
     int windowHeight = 1000;
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage)
+    {
         ImageView imageView = new ImageView();
         imageView.setFitWidth(windowWidth);
         imageView.setFitHeight(windowHeight);
