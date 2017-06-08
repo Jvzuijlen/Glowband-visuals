@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package arenatojava;
-
-import arduino.Arduino;
 import java.awt.Color;
 
 /**
@@ -14,31 +12,27 @@ import java.awt.Color;
  */
 public class ProtocolHandler
 {
-    byte startByte;
-    byte stopByte;
+    private byte startByte;
+    private byte stopByte;
+    private int headerSize = 22;
+    
+    private SerialHandler serialHandler;
     
     public ProtocolHandler()
     {
-        startByte = (byte)(100 & 0xFF);
-        stopByte = (byte)(200 & 0xFF);
+        startByte = (byte)100;
+        stopByte = (byte)200;
     }
     
-    public boolean OpenConnection(String comName)
+    public boolean OpenConnection(String comName, int baudRate)
     {
-        Arduino arduino = new Arduino("COM4", 9600);
-
-        try
+        if(serialHandler != null)
         {
-            arduino.openConnection(); 
-            byte x = 100;
-            arduino.serialWrite((char)x);
-            return true;
+            serialHandler.close();
         }
-        catch(Exception e)
-        {
-            System.out.println(e);
-            return false;
-        }
+        serialHandler = new SerialHandler(comName, baudRate);
+        
+        return serialHandler.initialize();
     }
     
     public boolean SendData(Color[][] imgData, Crowd crowd)
@@ -47,7 +41,9 @@ public class ProtocolHandler
         int headerSize = 22;
         byte[] sendData = new byte[pixelSize + headerSize];
         
-        createHeader(sendData, crowd);
+        int index = 0;
+        
+        //createHeader(sendData, crowd);
         
         try
         {
@@ -78,44 +74,62 @@ public class ProtocolHandler
         return false;
     }
     
-    public byte[] createHeader(byte[] data, Crowd crowd)
+    public byte[] createPixels(Color[][] imgData, Crowd crowd)
     {
+        int pixelSize = crowd.height * crowd.height * 7;
+        byte[] pixelData = new byte[pixelSize];
+        
         int index = 0;
-        data[index++] = (byte)(startByte & 0xFF);
-        
-        for(int i = 0; i < 4; i++)
+        for (int x = 0; x < crowd.width; x++)
         {
-            data[index++] = (byte)(toBytes(crowd.getNwLat())[i] & 0xFF);
+            for (int y = 0; y < crowd.height; y++)
+            {
+                int w = crowd.width;
+                pixelData[index++] = (byte)(w >> 8);       //Convert int to 2 byte array
+                pixelData[index++] = (byte)(w /*>> 0*/);
+
+                int h = crowd.height;
+                pixelData[index++] = (byte)(h >> 8);
+                pixelData[index++] = (byte)(h /*>> 0*/);   //Convert int to 2 byte array
+                
+                pixelData[index++] = (byte)imgData[x][y].getRed();
+                pixelData[index++] = (byte)imgData[x][y].getGreen();
+                pixelData[index++] = (byte)imgData[x][y].getBlue();
+            }
         }
+        return pixelData;
+    }
+    
+    public byte[] createHeader(Crowd crowd)
+    {
+        byte[] header = new byte[headerSize];
         
+        int index = 0;
+        header[index++] = startByte;
+        
+        int[] crowdData = crowd.getLatLonData();
         for(int i = 0; i < 4; i++)
         {
-            data[index++] = (byte)(toBytes(crowd.getNwLon())[i] & 0xFF);
-        }
-        
-        for(int i = 0; i < 4; i++)
-        {
-            data[index++] = (byte)(toBytes(crowd.getSeLat())[i] & 0xFF);
-        }
-        
-        for(int i = 0; i < 4; i++)
-        {
-            data[index++] = (byte)(toBytes(crowd.getSeLon())[i] & 0xFF);
+            int value = crowdData[i];
+            for(int y = 0; y < 4; y++)
+            {
+                header[index++] = (toBytes(value)[y]);
+            }
         }
         
         int w = crowd.width;
-        data[index++] = (byte) ((w >> 24) & 0xFF);
-        data[index++] = (byte) ((w >> 16) & 0xFF);
+        header[index++] = (byte)(w >> 8);       //Convert int to 2 byte array
+        header[index++] = (byte)(w /*>> 0*/);
         
         int h = crowd.height;
-        data[index++] = (byte) ((h >> 24) & 0xFF);
-        data[index++] = (byte) ((h >> 16) & 0xFF);
+        header[index++] = (byte)(h >> 8);
+        header[index++] = (byte)(h /*>> 0*/);   //Convert int to 2 byte array
         
-        data[index] = (byte)(stopByte & 0xFF);
-        return data;
+        header[index] = stopByte;
+        return header;
     }
     
-    private byte[] toBytes(int i)
+    private byte[] toBytes(int i) //Convert int to 4 byte array
     {
         byte[] result = new byte[4];
         result[0] = (byte) (i >> 24);

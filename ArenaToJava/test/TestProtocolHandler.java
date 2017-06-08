@@ -6,6 +6,8 @@
 
 import arenatojava.Crowd;
 import arenatojava.ProtocolHandler;
+import java.awt.Color;
+import java.util.Arrays;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,11 +17,11 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Joep
+ * @author jvzui
  */
-public class LatLngtoInt {
+public class TestProtocolHandler {
     
-    public LatLngtoInt() {
+    public TestProtocolHandler() {
     }
     
     @BeforeClass
@@ -37,7 +39,7 @@ public class LatLngtoInt {
     @After
     public void tearDown() {
     }
-
+    
     @Test
     public void doubleToInt()
     {
@@ -54,13 +56,27 @@ public class LatLngtoInt {
         crowd.setSE(3.23456789, 4.23456789);
         
         ProtocolHandler protocolHandler = new ProtocolHandler();
-        byte[] data = new byte[25];
-        protocolHandler.createHeader(data, crowd);
-        System.out.println(data);
+        byte[] data = protocolHandler.createHeader(crowd);
+        System.out.println(Arrays.toString(data));
     }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    
+    @Test
+    public void Pixels()
+    {
+        Crowd crowd = new Crowd(4, 2);
+        
+        ProtocolHandler protocolHandler = new ProtocolHandler();
+        
+        Color[][] imgData = new Color[2][2];
+        imgData[0][0] = Color.BLACK;
+        imgData[0][1] = Color.BLACK;
+        imgData[1][0] = Color.BLACK;
+        imgData[1][1] = Color.BLACK;
+        
+        byte[] data = protocolHandler.createPixels(, crowd);
+        //for (int i = 0; i < data.length; i++)
+        {
+            //System.out.println((int)(data[i] & 0xFF)); 
+        }
+    }
 }
