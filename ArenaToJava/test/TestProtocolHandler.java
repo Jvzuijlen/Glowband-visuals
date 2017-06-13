@@ -13,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -63,7 +62,7 @@ public class TestProtocolHandler {
     @Test
     public void Pixels()
     {
-        Crowd crowd = new Crowd(4, 2);
+        Crowd crowd = new Crowd(2, 2);
         
         ProtocolHandler protocolHandler = new ProtocolHandler();
         
@@ -73,7 +72,7 @@ public class TestProtocolHandler {
         imgData[1][0] = Color.BLACK;
         imgData[1][1] = Color.BLACK;
         
-        byte[] data = protocolHandler.createPixels(, crowd);
+        byte[] data = protocolHandler.createPixels(imgData, crowd);
         //for (int i = 0; i < data.length; i++)
         {
             //System.out.println((int)(data[i] & 0xFF)); 
