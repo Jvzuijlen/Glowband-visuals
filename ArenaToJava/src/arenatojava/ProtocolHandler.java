@@ -84,11 +84,11 @@ public class ProtocolHandler
         {
             for (int y = 0; y < crowd.height; y++)
             {
-                int w = crowd.width;
+                int w = x;
                 pixelData[index++] = (byte)(w >> 8);       //Convert int to 2 byte array
                 pixelData[index++] = (byte)(w /*>> 0*/);
 
-                int h = crowd.height;
+                int h = y;
                 pixelData[index++] = (byte)(h >> 8);
                 pixelData[index++] = (byte)(h /*>> 0*/);   //Convert int to 2 byte array
                 
