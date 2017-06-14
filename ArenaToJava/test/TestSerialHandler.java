@@ -61,9 +61,10 @@ public class TestSerialHandler {
     }
     */
     
+    /*
     @Test public void TestSerialLibHeader() throws InterruptedException
     {
-        SerialHandler main = new SerialHandler("COM4", 38400);
+        SerialHandler main = new SerialHandler("COM13", 38400);
         if(main.initialize())
         {    
             Crowd crowd = new Crowd(400, 300);
@@ -84,8 +85,8 @@ public class TestSerialHandler {
             }
         }
     }
+    */
     
-    /*
     @Test public void TestSerialLibHeaderPixels() throws InterruptedException
     {
         SerialHandler main = new SerialHandler("COM13", 38400);
@@ -117,10 +118,9 @@ public class TestSerialHandler {
             for(;;)
             {
                 main.writeData(header);
-                Thread.sleep(50); //25
+                Thread.sleep(1000); //25
             }
         }
         
     }
-    */
 }
