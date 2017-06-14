@@ -6,6 +6,7 @@
 
 import arenatojava.Crowd;
 import arenatojava.ProtocolHandler;
+import arenatojava.SQL;
 import arenatojava.SerialHandler;
 import java.awt.Color;
 import org.junit.After;
@@ -18,9 +19,9 @@ import org.junit.Test;
  *
  * @author Joep
  */
-public class TestSerialHandler_HeaderPixels {
+public class TestSerialHandler_LocationTest {
     
-    public TestSerialHandler_HeaderPixels() {
+    public TestSerialHandler_LocationTest() {
     }
     
     @BeforeClass
@@ -41,13 +42,12 @@ public class TestSerialHandler_HeaderPixels {
     
     @Test public void TestSerialLibHeaderPixels() throws InterruptedException
     {
-        SerialHandler main = new SerialHandler("COM13", 38400);
+        SerialHandler main = new SerialHandler("COM17", 38400);
         if(main.initialize())
         {
-            Crowd crowd = new Crowd(2, 2);
-
-            crowd.setNW(1.23456789, 2.23456789);
-            crowd.setSE(3.23456789, 4.23456789);
+            SQL sql = new SQL();
+            
+            Crowd crowd = sql.getCrowdInfo();
 
             ProtocolHandler protocolHandler = new ProtocolHandler();
 
