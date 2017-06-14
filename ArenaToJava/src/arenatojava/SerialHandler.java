@@ -29,6 +29,7 @@ import java.util.TooManyListenersException;
 public class SerialHandler implements SerialPortEventListener {
 
     public SerialPort serialPort;
+    public boolean PortOpen = false;
     /**
      * The port we're normally going to use.
      */
@@ -92,6 +93,7 @@ public class SerialHandler implements SerialPortEventListener {
             // add event listeners
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
+            PortOpen = true;
             return true;
         }
         catch (PortInUseException | UnsupportedCommOperationException | IOException | TooManyListenersException e)
