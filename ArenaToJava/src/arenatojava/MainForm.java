@@ -26,6 +26,10 @@ public class MainForm extends javax.swing.JFrame {
 
     private Crowd currentCrowd = null;
     private ImageHandler imgHandler = new ImageHandler();
+    private Image currentImage = null;
+    private ProtocolHandler protocolHandler = new ProtocolHandler();
+    private Converter converter = new Converter();
+    private SerialHandler serialHandler = null;
     
     /**
      * Creates new form MainForm
@@ -47,6 +51,13 @@ public class MainForm extends javax.swing.JFrame {
         jInternalFrame1 = new javax.swing.JInternalFrame();
         jButtonScreenshot = new javax.swing.JButton();
         jSPImage = new javax.swing.JScrollPane();
+        jButtonCrowd = new javax.swing.JButton();
+        jButtonOpenComPort = new javax.swing.JButton();
+        jTextFieldComPort = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldBaudRate = new javax.swing.JTextField();
+        jLabelComStatus = new javax.swing.JLabel();
 
         jInternalFrame1.setVisible(true);
 
@@ -70,49 +81,125 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        jButtonCrowd.setText("Get Crowd Info");
+        jButtonCrowd.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonCrowdMouseClicked(evt);
+            }
+        });
+
+        jButtonOpenComPort.setText("Open Port");
+        jButtonOpenComPort.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonOpenComPortMouseClicked(evt);
+            }
+        });
+
+        jTextFieldComPort.setText("COM");
+
+        jLabel1.setText("COM Port:");
+
+        jLabel2.setText("BaudRate:");
+
+        jTextFieldBaudRate.setText("38400");
+
+        jLabelComStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelComStatus.setText("COM Port: Closed");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(154, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSPImage)
-                    .addComponent(jButtonScreenshot, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jButtonScreenshot, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldComPort))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldBaudRate))
+                    .addComponent(jButtonCrowd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonOpenComPort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelComStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 342, Short.MAX_VALUE)
+                .addComponent(jSPImage, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(391, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSPImage, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonScreenshot)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonCrowd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldComPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jTextFieldBaudRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonOpenComPort)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelComStatus))
+                    .addComponent(jSPImage, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    JLabel jlab = new JLabel();
+
     
     private void jButtonScreenshotMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonScreenshotMouseClicked
+        currentImage = imgHandler.takeScreenShot();
+        UpdateImageView();
+    }//GEN-LAST:event_jButtonScreenshotMouseClicked
+
+    private void jButtonCrowdMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonCrowdMouseClicked
+        SQL sql = new SQL();
+        
+        currentCrowd = sql.getCrowdInfo();
         
         try
         {
-            Image img = imgHandler.takeScreenShot();
-            
-            jlab.setIcon(new ImageIcon(img));
-            jlab.setHorizontalAlignment(JLabel.CENTER);
-            
-            jSPImage.getViewport().add(jlab);
+            currentImage = converter.Resize((BufferedImage) currentImage, currentCrowd.width, currentCrowd.height);
         }
-        catch (AWTException | IOException ex)
+        catch (IOException ex)
         {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButtonScreenshotMouseClicked
+        UpdateImageView();
+    }//GEN-LAST:event_jButtonCrowdMouseClicked
 
+    private void jButtonOpenComPortMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonOpenComPortMouseClicked
+        String comport = jTextFieldComPort.getText();
+        int baudrate = Integer.parseInt(jTextFieldBaudRate.getText());
+        serialHandler = new SerialHandler(comport, baudrate);
+        if(serialHandler.initialize())
+        {
+            jLabelComStatus.setText("COM Port: Open");
+        }
+        else
+        {
+            jLabelComStatus.setText("COM Port: Closed");
+        }
+    }//GEN-LAST:event_jButtonOpenComPortMouseClicked
+
+    
+    JLabel jlab = new JLabel();
+    private void UpdateImageView()
+    {
+        jlab.setIcon(new ImageIcon(currentImage));
+        jlab.setHorizontalAlignment(JLabel.CENTER);
+        jSPImage.getViewport().add(jlab);
+    }
     /**
      * @param args the command line arguments
      */
@@ -149,8 +236,15 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCrowd;
+    private javax.swing.JButton jButtonOpenComPort;
     private javax.swing.JButton jButtonScreenshot;
     private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabelComStatus;
     private javax.swing.JScrollPane jSPImage;
+    private javax.swing.JTextField jTextFieldBaudRate;
+    private javax.swing.JTextField jTextFieldComPort;
     // End of variables declaration//GEN-END:variables
 }
