@@ -6,6 +6,7 @@
 package arenatojava;
 
 import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -30,6 +32,10 @@ public class MainForm extends javax.swing.JFrame {
     private ProtocolHandler protocolHandler = new ProtocolHandler();
     private Converter converter = new Converter();
     private SerialHandler serialHandler = null;
+    
+    private Thread sendingThread = null;
+    private boolean threadRunning = false;
+    private boolean stopThread = false;
     
     /**
      * Creates new form MainForm
@@ -58,6 +64,8 @@ public class MainForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTextFieldBaudRate = new javax.swing.JTextField();
         jLabelComStatus = new javax.swing.JLabel();
+        jButtonThreadStart = new javax.swing.JButton();
+        jButtonThreadStop = new javax.swing.JButton();
 
         jInternalFrame1.setVisible(true);
 
@@ -104,42 +112,62 @@ public class MainForm extends javax.swing.JFrame {
         jTextFieldBaudRate.setText("38400");
 
         jLabelComStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelComStatus.setText("COM Port: Closed");
+        jLabelComStatus.setText("COM Port:");
+
+        jButtonThreadStart.setText("Start");
+        jButtonThreadStart.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonThreadStartMouseClicked(evt);
+            }
+        });
+
+        jButtonThreadStop.setText("Stop");
+        jButtonThreadStop.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonThreadStopMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonScreenshot, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButtonScreenshot, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextFieldComPort))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextFieldBaudRate))
+                        .addComponent(jButtonCrowd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonOpenComPort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabelComStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldComPort))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldBaudRate))
-                    .addComponent(jButtonCrowd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonOpenComPort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelComStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 604, Short.MAX_VALUE)
-                .addComponent(jSPImage, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(129, 129, 129))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButtonThreadStart, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                            .addComponent(jButtonThreadStop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(jSPImage, javax.swing.GroupLayout.PREFERRED_SIZE, 649, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jButtonScreenshot)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonCrowd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldComPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonScreenshot)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonCrowd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldComPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -147,11 +175,13 @@ public class MainForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonOpenComPort)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelComStatus))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jSPImage, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(120, Short.MAX_VALUE))
+                        .addComponent(jLabelComStatus)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonThreadStart)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonThreadStop))
+                    .addComponent(jSPImage, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
@@ -194,6 +224,61 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonOpenComPortMouseClicked
 
+    private void jButtonThreadStartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonThreadStartMouseClicked
+        
+        stopThread = false;
+        jButtonThreadStart.setEnabled(false);
+        jButtonThreadStop.setEnabled(true);
+        
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>()
+        {
+            @Override
+            protected Void doInBackground()
+            {
+                for(;;)
+                {
+                    if(serialHandler.PortOpen && currentCrowd != null && !stopThread)
+                    {
+                        Color[][] imgData = new Converter().CombineImageWithCrowd(currentCrowd, new ImageHandler().takeScreenShot());
+
+                        byte[] header = protocolHandler.createHeader(currentCrowd);
+                        byte[][] data = protocolHandler.createPixels(imgData, currentCrowd);
+
+                        try
+                        {
+                            //Send Header
+                            serialHandler.writeData(header);
+
+                            //Send pixels
+                            for (int i = 0; i < data.length; i++)
+                            {
+                                //Send 1 pixel
+                                serialHandler.writeData(data[i]);
+                                Thread.sleep(20); //25
+                            }
+                        }
+                        catch (InterruptedException ex)
+                        {
+                            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        };
+        
+        worker.execute();
+    }//GEN-LAST:event_jButtonThreadStartMouseClicked
+
+    private void jButtonThreadStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonThreadStopMouseClicked
+            jButtonThreadStart.setEnabled(true);
+            jButtonThreadStop.setEnabled(false);
+            stopThread = true;
+    }//GEN-LAST:event_jButtonThreadStopMouseClicked
+   
+    /*
+
+    */
+    
     
     JLabel jlab = new JLabel();
     private void UpdateImageView()
@@ -241,6 +326,8 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton jButtonCrowd;
     private javax.swing.JButton jButtonOpenComPort;
     private javax.swing.JButton jButtonScreenshot;
+    private javax.swing.JButton jButtonThreadStart;
+    private javax.swing.JButton jButtonThreadStop;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

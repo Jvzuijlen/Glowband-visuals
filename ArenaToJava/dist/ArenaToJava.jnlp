@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="ArenaToJava.jar" size="22507" download="eager" />
+    <jar href="ArenaToJava.jar" size="25658" download="eager" />
     <jar href="lib\RXTXcomm.jar" size="60984" download="eager" />
     <jar href="lib\arduino.jar" size="6873" download="eager" />
     <jar href="lib\comm.jar" size="28043" download="eager" />
