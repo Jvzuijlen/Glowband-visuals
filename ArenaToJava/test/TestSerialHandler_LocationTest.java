@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 
+import arenatojava.Converter;
 import arenatojava.Crowd;
+import arenatojava.ImageHandler;
 import arenatojava.ProtocolHandler;
 import arenatojava.SQL;
 import arenatojava.SerialHandler;
@@ -51,11 +53,8 @@ public class TestSerialHandler_LocationTest {
 
             ProtocolHandler protocolHandler = new ProtocolHandler();
 
-            Color[][] imgData = new Color[2][2];
-            imgData[0][0] = Color.BLACK;
-            imgData[0][1] = Color.BLUE;
-            imgData[1][0] = Color.RED;
-            imgData[1][1] = Color.GREEN;
+            
+            Color[][] imgData = new Converter().CombineImageWithCrowd(crowd, new ImageHandler().takeScreenShot());
 
             byte[] header = protocolHandler.createHeader(crowd);
             byte[] data = protocolHandler.createPixels(imgData, crowd);

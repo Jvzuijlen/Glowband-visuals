@@ -25,9 +25,7 @@ import javax.swing.JLabel;
 public class MainForm extends javax.swing.JFrame {
 
     private Crowd currentCrowd = null;
-    private BufferedImage capture = null;
-    private Rectangle screenRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDefaultConfiguration().getBounds();
-    private Image screenshotImage;
+    private ImageHandler imgHandler = new ImageHandler();
     
     /**
      * Creates new form MainForm
@@ -102,19 +100,9 @@ public class MainForm extends javax.swing.JFrame {
         
         try
         {
-            //Take Screenshot
-            capture = new Robot().createScreenCapture(screenRect);
+            Image img = imgHandler.takeScreenShot();
             
-            if(currentCrowd != null)
-            {
-                //Resize Screenshot to Crowd dimensions
-                capture = new Converter().Resize(capture, currentCrowd.width, currentCrowd.height);
-            }
-
-            //Convert Screenshot to Image object
-            screenshotImage = capture;
-            
-            jlab.setIcon(new ImageIcon(screenshotImage));
+            jlab.setIcon(new ImageIcon(img));
             jlab.setHorizontalAlignment(JLabel.CENTER);
             
             jSPImage.getViewport().add(jlab);

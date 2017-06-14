@@ -6,8 +6,11 @@
 package arenatojava;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.coobird.thumbnailator.Thumbnails;
 
 /**
@@ -59,5 +62,20 @@ public class Converter
     public BufferedImage Resize(BufferedImage img, int newW, int newH) throws IOException
     {
         return Thumbnails.of(img).forceSize(newW, newH).asBufferedImage();
+    }
+    
+    public Color[][] CombineImageWithCrowd(Crowd crowd, Image img)
+    {
+        try
+        {
+            BufferedImage newImg = Resize((BufferedImage) img, crowd.width, crowd.height);
+            Color colors[][] = ImageToData(newImg);
+            return colors;
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }
