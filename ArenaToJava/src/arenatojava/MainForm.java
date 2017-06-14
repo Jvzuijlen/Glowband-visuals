@@ -98,7 +98,7 @@ public class MainForm extends javax.swing.JFrame {
     
     private void jButtonScreenshotMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonScreenshotMouseClicked
         
-        try
+        //try
         {
             Image img = imgHandler.takeScreenShot();
             
@@ -107,9 +107,9 @@ public class MainForm extends javax.swing.JFrame {
             
             jSPImage.getViewport().add(jlab);
         }
-        catch (AWTException | IOException ex)
+        //catch (AWTException | IOException ex)
         {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonScreenshotMouseClicked
 

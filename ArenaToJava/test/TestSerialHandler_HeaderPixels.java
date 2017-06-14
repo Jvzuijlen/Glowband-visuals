@@ -58,7 +58,7 @@ public class TestSerialHandler_HeaderPixels {
             imgData[1][1] = Color.GREEN;
 
             byte[] header = protocolHandler.createHeader(crowd);
-            byte[] data = protocolHandler.createPixels(imgData, crowd);
+            /*byte[] data = protocolHandler.createPixels(imgData, crowd);
 
             byte[] finalData = protocolHandler.combineHeaderPixels(header, data);
 
@@ -71,7 +71,7 @@ public class TestSerialHandler_HeaderPixels {
             {
                 main.writeData(header);
                 Thread.sleep(50); //25
-            }
+            }*/
         }
     }
 }
