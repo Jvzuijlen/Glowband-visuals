@@ -55,29 +55,42 @@ public class ArenaToJava extends Application
                 {
                     try
                     {
-                        sql.dropTable();
-                        sql.createTable();
+                        //sql.dropTable();
+                        //sql.createTable();
                         
-                        Crowd crowd = sql.getCrowdInfo();
-                        
+                        //Create Screenshot
                         capture = new Robot().createScreenCapture(screenRect);
+                        
+                        //Set Window Title
                         LT = averageColor(capture, 0,0, (screenRect.width / 2 - 10), (screenRect.height / 2 - 10));
                         LB = averageColor(capture, 0, (screenRect.height / 2), (screenRect.width / 2), (screenRect.height / 2));
                         RT = averageColor(capture, (screenRect.width / 2), 0, (screenRect.width / 2), (screenRect.height / 2));
                         RB = averageColor(capture, (screenRect.width / 2), (screenRect.height / 2), (screenRect.width / 2), (screenRect.height / 2));
                         
-                        capture = new Converter().Resize(capture, crowd.width, crowd.height);
-                        
-                        Color colors[][] = new Converter().ImageToData(capture);
-                        
-                        Image x = SwingFXUtils.toFXImage(capture, null);
-                        imageView.setImage(x);
-                        
-                        sql.updateColors(colors, crowd.width, crowd.height);
-                        
-                        Platform.runLater(() -> {
+                        Platform.runLater(() ->
+                        {
                             primaryStage.setTitle(LT.toString() + " : " + LB.toString() + " : " + RT.toString() + " : " + RB.toString());
                         });
+                        
+                        //Get Crowd Info
+                        Crowd crowd = sql.getCrowdInfo();
+                        
+                        //Resize Screenshot to Crowd dimensions
+                        capture = new Converter().Resize(capture, crowd.width, crowd.height);
+                        
+                        
+                        //Convert Screenshot to Image object
+                        Image x = SwingFXUtils.toFXImage(capture, null);
+                        
+                        //Set Imageview to Image object
+                        imageView.setImage(x);
+                        
+                        //Convert Screenshot to RGB Color Array
+                        Color colors[][] = new Converter().ImageToData(capture);
+                        
+                        //Send color data to sql
+                        sql.updateColors(colors, crowd.width, crowd.height);
+                       
                     }
                     catch (AWTException | IOException e)
                     {
@@ -108,7 +121,7 @@ public class ArenaToJava extends Application
         launch(args);
     }
     
-    public static Color averageColor(BufferedImage bi, int x0, int y0, int w, int h)
+    private static Color averageColor(BufferedImage bi, int x0, int y0, int w, int h)
     {
         int x1 = x0 + w;
         int y1 = y0 + h;
