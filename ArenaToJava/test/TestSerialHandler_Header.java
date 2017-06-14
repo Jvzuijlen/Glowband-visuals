@@ -19,9 +19,9 @@ import org.junit.Test;
  *
  * @author Joep
  */
-public class TestSerialHandler {
+public class TestSerialHandler_Header {
     
-    public TestSerialHandler() {
+    public TestSerialHandler_Header() {
     }
     
     @BeforeClass
@@ -40,21 +40,26 @@ public class TestSerialHandler {
     public void tearDown() {
     }
     
-    @Test public void TestSerialLib() throws InterruptedException
+    @Test public void TestSerialLibHeader() throws InterruptedException
     {
-        SerialHandler main = new SerialHandler("COM12", 250000);
+        SerialHandler main = new SerialHandler("COM4", 38400);
         if(main.initialize())
-        {      
-            byte[] data = new byte[4];
-            data[0] = (byte)200;
-            data[1] = (byte)(201 & 0xFF);
-            data[2] = (byte)400;
-            data[3] = (byte)(10 & 0xFF);
+        {    
+            Crowd crowd = new Crowd(400, 300);
+            crowd.setNW(1.23456789, 2.23456789);
+            crowd.setSE(3.23456789, 4.23456789);
+
+            ProtocolHandler protocolHandler = new ProtocolHandler();
+            byte[] header = protocolHandler.createHeader(crowd);
+            for (int i = 0; i < header.length; i++)
+            {
+                System.out.println((int)(header[i] & 0xFF)); 
+            }
 
             for(;;)
             {
-                main.writeData(data);
-                Thread.sleep(100);
+                main.writeData(header);
+                Thread.sleep(50); //25
             }
         }
     }

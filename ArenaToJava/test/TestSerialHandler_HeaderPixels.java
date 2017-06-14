@@ -19,9 +19,9 @@ import org.junit.Test;
  *
  * @author Joep
  */
-public class TestSerialHandler {
+public class TestSerialHandler_HeaderPixels {
     
-    public TestSerialHandler() {
+    public TestSerialHandler_HeaderPixels() {
     }
     
     @BeforeClass
@@ -40,26 +40,6 @@ public class TestSerialHandler {
     public void tearDown() {
     }
     
-    @Test public void TestSerialLib() throws InterruptedException
-    {
-        SerialHandler main = new SerialHandler("COM12", 250000);
-        if(main.initialize())
-        {      
-            byte[] data = new byte[4];
-            data[0] = (byte)200;
-            data[1] = (byte)(201 & 0xFF);
-            data[2] = (byte)400;
-            data[3] = (byte)(10 & 0xFF);
-
-            for(;;)
-            {
-                main.writeData(data);
-                Thread.sleep(100);
-            }
-        }
-    }
-    
-    /*
     @Test public void TestSerialLibHeaderPixels() throws InterruptedException
     {
         SerialHandler main = new SerialHandler("COM13", 38400);
@@ -94,7 +74,5 @@ public class TestSerialHandler {
                 Thread.sleep(50); //25
             }
         }
-        
     }
-    */
 }
