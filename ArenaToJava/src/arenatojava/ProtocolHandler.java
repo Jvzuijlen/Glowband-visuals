@@ -138,4 +138,12 @@ public class ProtocolHandler
         result[3] = (byte) (i /*>> 0*/);
         return result;
     }
+    
+    public byte[] combineHeaderPixels(byte[] header, byte[] data)
+    {
+        byte[] finalData = new byte[header.length + data.length];
+        System.arraycopy(header, 0, finalData, 0, header.length);
+        System.arraycopy(data, 0, finalData, header.length, data.length);
+        return finalData;
+    }
 }

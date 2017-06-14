@@ -7,6 +7,7 @@
 import arenatojava.Crowd;
 import arenatojava.ProtocolHandler;
 import arenatojava.SerialHandler;
+import java.awt.Color;
 import java.util.Arrays;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -62,7 +63,7 @@ public class TestSerialHandler {
     
     @Test public void TestSerialLibHeader() throws InterruptedException
     {
-        SerialHandler main = new SerialHandler("COM13", 38400);
+        SerialHandler main = new SerialHandler("COM4", 38400);
         if(main.initialize())
         {    
             Crowd crowd = new Crowd(400, 300);
@@ -83,4 +84,43 @@ public class TestSerialHandler {
             }
         }
     }
+    
+    /*
+    @Test public void TestSerialLibHeaderPixels() throws InterruptedException
+    {
+        SerialHandler main = new SerialHandler("COM13", 38400);
+        if(main.initialize())
+        {
+            Crowd crowd = new Crowd(2, 2);
+
+            crowd.setNW(1.23456789, 2.23456789);
+            crowd.setSE(3.23456789, 4.23456789);
+
+            ProtocolHandler protocolHandler = new ProtocolHandler();
+
+            Color[][] imgData = new Color[2][2];
+            imgData[0][0] = Color.BLACK;
+            imgData[0][1] = Color.BLUE;
+            imgData[1][0] = Color.RED;
+            imgData[1][1] = Color.GREEN;
+
+            byte[] header = protocolHandler.createHeader(crowd);
+            byte[] data = protocolHandler.createPixels(imgData, crowd);
+
+            byte[] finalData = protocolHandler.combineHeaderPixels(header, data);
+
+            for (int i = 0; i < finalData.length; i++)
+            {
+                System.out.println((int)(finalData[i] & 0xFF)); 
+            }
+
+            for(;;)
+            {
+                main.writeData(header);
+                Thread.sleep(50); //25
+            }
+        }
+        
+    }
+    */
 }
