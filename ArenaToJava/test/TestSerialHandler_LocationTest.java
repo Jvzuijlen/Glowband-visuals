@@ -52,24 +52,33 @@ public class TestSerialHandler_LocationTest {
             Crowd crowd = sql.getCrowdInfo();
 
             ProtocolHandler protocolHandler = new ProtocolHandler();
-
             
-            Color[][] imgData = new Converter().CombineImageWithCrowd(crowd, new ImageHandler().takeScreenShot());
+            //Color[][] imgData = new Converter().CombineImageWithCrowd(crowd, new ImageHandler().takeScreenShot());
 
-            byte[] header = protocolHandler.createHeader(crowd);
-            byte[] data = protocolHandler.createPixels(imgData, crowd);
+            //byte[] header = protocolHandler.createHeader(crowd);
+            //byte[][] data = protocolHandler.createPixels(imgData, crowd);
 
-            byte[] finalData = protocolHandler.combineHeaderPixels(header, data);
+            //byte[] finalData = protocolHandler.combineHeaderPixels(header, data);
 
-            for (int i = 0; i < finalData.length; i++)
+            /*for (int i = 0; i < finalData.length; i++)
             {
                 System.out.println((int)(finalData[i] & 0xFF)); 
-            }
+            }*/
 
             for(;;)
             {
+                Color[][] imgData = new Converter().CombineImageWithCrowd(crowd, new ImageHandler().takeScreenShot());
+
+                byte[] header = protocolHandler.createHeader(crowd);
+                byte[][] data = protocolHandler.createPixels(imgData, crowd);
+                
                 main.writeData(header);
-                Thread.sleep(50); //25
+                for (int i = 0; i < data.length; i++)
+                {
+                    main.writeData(data[i]);
+                    Thread.sleep(20); //25
+                }
+                //Thread.sleep(20); //25
             }
         }
     }

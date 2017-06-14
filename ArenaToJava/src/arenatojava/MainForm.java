@@ -167,13 +167,17 @@ public class MainForm extends javax.swing.JFrame {
         
         currentCrowd = sql.getCrowdInfo();
         
-        try
+        //try
         {
             currentImage = converter.Resize((BufferedImage) currentImage, currentCrowd.width, currentCrowd.height);
         }
+<<<<<<< HEAD
         catch (IOException ex)
+=======
+        //catch (AWTException | IOException ex)
+>>>>>>> 9efd7aef7454b35adff6b2539c9deffdc3a70b41
         {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         UpdateImageView();
     }//GEN-LAST:event_jButtonCrowdMouseClicked

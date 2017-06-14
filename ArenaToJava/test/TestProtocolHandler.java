@@ -72,7 +72,7 @@ public class TestProtocolHandler {
         imgData[1][0] = Color.RED;
         imgData[1][1] = Color.GREEN;
         
-        byte[] data = protocolHandler.createPixels(imgData, crowd);
+        //byte[] data = protocolHandler.createPixels(imgData, crowd);
         //for (int i = 0; i < data.length; i++)
         {
             //System.out.println((int)(data[i] & 0xFF)); 

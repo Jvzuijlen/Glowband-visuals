@@ -74,27 +74,28 @@ public class ProtocolHandler
         return false;
     }
     
-    public byte[] createPixels(Color[][] imgData, Crowd crowd)
+    public byte[][] createPixels(Color[][] imgData, Crowd crowd)
     {
-        int pixelSize = crowd.height * crowd.height * 7;
-        byte[] pixelData = new byte[pixelSize];
+        int pixelSize = 7;
+        byte[][] pixelData = new byte[crowd.height * crowd.height][pixelSize];
         
         int index = 0;
         for (int x = 0; x < crowd.width; x++)
         {
             for (int y = 0; y < crowd.height; y++)
             {
+                int pixelIndex = 0;
                 int w = x;
-                pixelData[index++] = (byte)(w >> 8);       //Convert int to 2 byte array
-                pixelData[index++] = (byte)(w /*>> 0*/);
+                pixelData[index][pixelIndex++] = (byte)(w >> 8);       //Convert int to 2 byte array
+                pixelData[index][pixelIndex++] = (byte)(w /*>> 0*/);
 
                 int h = y;
-                pixelData[index++] = (byte)(h >> 8);
-                pixelData[index++] = (byte)(h /*>> 0*/);   //Convert int to 2 byte array
+                pixelData[index][pixelIndex++] = (byte)(h >> 8);
+                pixelData[index][pixelIndex++] = (byte)(h /*>> 0*/);   //Convert int to 2 byte array
                 
-                pixelData[index++] = (byte)imgData[x][y].getRed();
-                pixelData[index++] = (byte)imgData[x][y].getGreen();
-                pixelData[index++] = (byte)imgData[x][y].getBlue();
+                pixelData[index][pixelIndex++] = (byte)imgData[x][y].getRed();
+                pixelData[index][pixelIndex++] = (byte)imgData[x][y].getGreen();
+                pixelData[index++][pixelIndex++] = (byte)imgData[x][y].getBlue();
             }
         }
         return pixelData;
