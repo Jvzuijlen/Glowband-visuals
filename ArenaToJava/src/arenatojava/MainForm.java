@@ -15,7 +15,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.embed.swing.SwingFXUtils;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingWorker;
@@ -27,14 +26,12 @@ import javax.swing.SwingWorker;
 public class MainForm extends javax.swing.JFrame {
 
     private Crowd currentCrowd = null;
-    private ImageHandler imgHandler = new ImageHandler();
+    private final ImageHandler imgHandler = new ImageHandler();
     private Image currentImage = null;
-    private ProtocolHandler protocolHandler = new ProtocolHandler();
-    private Converter converter = new Converter();
+    private final ProtocolHandler protocolHandler;
+    private final Converter converter;
     private SerialHandler serialHandler = null;
     
-    private Thread sendingThread = null;
-    private boolean threadRunning = false;
     private boolean stopThread = false;
     
     /**
@@ -42,6 +39,8 @@ public class MainForm extends javax.swing.JFrame {
      */
     public MainForm()
     {
+        this.converter = new Converter();
+        this.protocolHandler = new ProtocolHandler();
         initComponents();
     }
 
@@ -201,7 +200,7 @@ public class MainForm extends javax.swing.JFrame {
         
         try
         {
-            currentImage = converter.Resize((BufferedImage) currentImage, currentCrowd.width, currentCrowd.height);
+            currentImage = converter.Resize((BufferedImage) currentImage, currentCrowd.getWidth(), currentCrowd.getHeight());
         }
         catch (IOException ex)
         {
