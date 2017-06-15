@@ -9,7 +9,6 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -200,7 +199,8 @@ public class MainForm extends javax.swing.JFrame {
         
         try
         {
-            currentImage = converter.Resize((BufferedImage) currentImage, currentCrowd.getWidth(), currentCrowd.getHeight());
+            if(currentImage != null)
+                currentImage = converter.Resize((BufferedImage) currentImage, currentCrowd.getWidth(), currentCrowd.getHeight());
         }
         catch (IOException ex)
         {
@@ -238,16 +238,18 @@ public class MainForm extends javax.swing.JFrame {
                 {
                     if(serialHandler.PortOpen && currentCrowd != null && !stopThread)
                     {
-                        Color[][] imgData = new Converter().CombineImageWithCrowd(currentCrowd, new ImageHandler().takeScreenShot());
-
-                        byte[] header = protocolHandler.createHeader(currentCrowd);
-                        byte[][] data = protocolHandler.createPixels(imgData, currentCrowd);
-
+                        
                         try
                         {
+                            Color[][] imgData;
+                            imgData = new Converter().CombineImageWithCrowd(currentCrowd, new Converter().Resize((BufferedImage) new ImageHandler().takeScreenShot(), currentCrowd.getWidth(), currentCrowd.getHeight()));
+                            byte[] header = protocolHandler.createHeader(currentCrowd);
+                            byte[][] data = protocolHandler.createPixels(imgData, currentCrowd);
+                            
                             //Send Header
                             serialHandler.writeData(header);
 
+                            Thread.sleep(20); //25
                             //Send pixels
                             for (int i = 0; i < data.length; i++)
                             {
@@ -255,6 +257,10 @@ public class MainForm extends javax.swing.JFrame {
                                 serialHandler.writeData(data[i]);
                                 Thread.sleep(20); //25
                             }
+                        }
+                        catch (IOException ex)
+                        {
+                            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         catch (InterruptedException ex)
                         {

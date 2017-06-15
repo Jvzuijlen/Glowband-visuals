@@ -78,7 +78,7 @@ public class TestSerialHandler_LocationTest {
                     main.writeData(data[i]);
                     Thread.sleep(20); //25
                 }
-                //Thread.sleep(20); //25
+                Thread.sleep(20); //25
             }
         }
     }
