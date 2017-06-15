@@ -15,8 +15,8 @@ public class Crowd
     private int nwLongitude;
     private int seLatitude;
     private int seLongitude;
-    public int width;
-    public int height;
+    private int width;
+    private int height;
     
     public Crowd(int width, int height)
     {
@@ -24,7 +24,17 @@ public class Crowd
         this.height = height;
     }
     
-    public int[] getLatLonData()
+    public synchronized int getWidth()
+    {
+        return this.width;
+    }
+    
+    public synchronized int getHeight()
+    {
+        return this.height;
+    }
+    
+    public synchronized int[] getLatLonData()
     {
         int[] data = new int[4];
         
@@ -35,34 +45,34 @@ public class Crowd
         return data;
     }
     
-    public void setNW(double lat, double lon)
+    public synchronized void setNW(double lat, double lon)
     {
         nwLatitude = (int)(lat * 100000);
         nwLongitude = (int)(lon * 100000);
     }
     
-    public void setSE(double lat, double lon)
+    public synchronized void setSE(double lat, double lon)
     {
         seLatitude = (int)(lat * 100000);
         seLongitude = (int)(lon * 100000);
     }
     
-    public int getNwLat()
+    public synchronized int getNwLat()
     {
         return this.nwLatitude;
     }
     
-    public int getNwLon()
+    public synchronized int getNwLon()
     {
         return this.nwLongitude;
     }
         
-    public int getSeLat()
+    public synchronized int getSeLat()
     {
         return this.seLatitude;
     }
             
-    public int getSeLon()
+    public synchronized int getSeLon()
     {
         return this.seLongitude;
     }

@@ -37,7 +37,7 @@ public class ProtocolHandler
     
     public boolean SendData(Color[][] imgData, Crowd crowd)
     {
-        int pixelSize = crowd.height * crowd.height * 11;
+        int pixelSize = crowd.getHeight() * crowd.getWidth() * 11;
         int headerSize = 22;
         byte[] sendData = new byte[pixelSize + headerSize];
         
@@ -47,9 +47,9 @@ public class ProtocolHandler
         
         try
         {
-            for (int x = 0; x < crowd.width; x++)
+            for (int x = 0; x < crowd.getWidth(); x++)
             {
-                for (int y = 0; y < crowd.height; y++)
+                for (int y = 0; y < crowd.getHeight(); y++)
                 {
                         /*pstmt.setInt(2, x);
                         pstmt.setInt(3, y);
@@ -77,12 +77,12 @@ public class ProtocolHandler
     public byte[][] createPixels(Color[][] imgData, Crowd crowd)
     {
         int pixelSize = 7;
-        byte[][] pixelData = new byte[crowd.height * crowd.height][pixelSize];
+        byte[][] pixelData = new byte[crowd.getWidth() * crowd.getHeight()][pixelSize];
         
         int index = 0;
-        for (int x = 0; x < crowd.width; x++)
+        for (int x = 0; x < crowd.getWidth(); x++)
         {
-            for (int y = 0; y < crowd.height; y++)
+            for (int y = 0; y < crowd.getHeight(); y++)
             {
                 int pixelIndex = 0;
                 int w = x;
@@ -118,11 +118,11 @@ public class ProtocolHandler
             }
         }
         
-        int w = crowd.width;
+        int w = crowd.getWidth();
         header[index++] = (byte)(w >> 8);       //Convert int to 2 byte array
         header[index++] = (byte)(w /*>> 0*/);
         
-        int h = crowd.height;
+        int h = crowd.getHeight();
         header[index++] = (byte)(h >> 8);
         header[index++] = (byte)(h /*>> 0*/);   //Convert int to 2 byte array
         

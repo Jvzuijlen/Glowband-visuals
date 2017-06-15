@@ -76,7 +76,7 @@ public class ArenaToJava extends Application
                         Crowd crowd = sql.getCrowdInfo();
                         
                         //Resize Screenshot to Crowd dimensions
-                        capture = new Converter().Resize(capture, crowd.width, crowd.height);
+                        capture = new Converter().Resize(capture, crowd.getWidth(), crowd.getHeight());
                         
                         
                         //Convert Screenshot to Image object
@@ -89,7 +89,7 @@ public class ArenaToJava extends Application
                         Color colors[][] = new Converter().ImageToData(capture);
                         
                         //Send color data to sql
-                        sql.updateColors(colors, crowd.width, crowd.height);
+                        sql.updateColors(colors, crowd.getWidth(), crowd.getHeight());
                        
                     }
                     catch (AWTException | IOException e)

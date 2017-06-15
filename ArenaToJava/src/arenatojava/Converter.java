@@ -68,7 +68,7 @@ public class Converter
     {
         try
         {
-            BufferedImage newImg = Resize((BufferedImage) img, crowd.width, crowd.height);
+            BufferedImage newImg = Resize((BufferedImage) img, crowd.getWidth(), crowd.getHeight());
             Color colors[][] = ImageToData(newImg);
             return colors;
         }
